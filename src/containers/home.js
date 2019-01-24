@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Radio, Row, Tabs, Card } from 'antd'
+import { Button, Col, Divider, Radio, Row, Tabs } from 'antd'
 import React from 'react'
 import styled from 'styled-components/macro'
 
@@ -10,6 +10,7 @@ import {
   StyledValueText
 } from '../components/typography'
 import BreakLine from '../components/break-line'
+import InformationCardsBox from '../components/information-cards-box'
 import { useDrizzle, useDrizzleState } from '../temp/drizzle-react-hooks'
 
 const StyledCardContainer = styled.div`
@@ -68,17 +69,6 @@ const StyledTabText = styled(StyledText)`
   font-size: 0.95vw;
 `
 
-const StyledCard = styled(Card)`
-  background: rgba(255, 255, 255, 0.08);
-  border: none;
-  padding: 16px;
-
-  .ant-card-body {
-    padding: 0px;
-    border-right: 1px solid white;
-  }
-`
-
 export default () => {
   const { useCacheCall, useCacheEvents } = useDrizzle()
   const drizzleState = useDrizzleState(drizzleState => ({
@@ -87,7 +77,7 @@ export default () => {
 
   return (
     <div>
-      <Row>
+      <Row style={{'margin-bottom': '76px'}}>
         <Col span={9}>
           <StyledSubheading>Contribution Options</StyledSubheading>
           <StyledCardContainer>
@@ -125,9 +115,21 @@ export default () => {
           <StyledSubheading style={{ 'margin-top': '34px' }}>
             Daily Auction
           </StyledSubheading>
-          <StyledCard>XXXX PNK</StyledCard>
+          <InformationCardsBox
+            textMain={"XXXX PNK"}
+            subtextMain={"Amount for Sale"}
+            textSecondary={"XXXX ETH"}
+            subtextSecondary={"ETH Contributed Today"}
+          />
+          <InformationCardsBox
+            textMain={"XXXX ETH"}
+            subtextMain={"PNK price if no other bids are made"}
+            textSecondary={"12:21"}
+            subtextSecondary={"Remaining Time"}
+          />
         </Col>
       </Row>
+      <BreakLine />
     </div>
   )
 }
