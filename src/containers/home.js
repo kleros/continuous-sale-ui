@@ -11,6 +11,7 @@ import {
 } from '../components/typography'
 import BreakLine from '../components/break-line'
 import InformationCardsBox from '../components/information-cards-box'
+import Table from '../components/table'
 import { useDrizzle, useDrizzleState } from '../temp/drizzle-react-hooks'
 
 const StyledCardContainer = styled.div`
@@ -68,6 +69,23 @@ const StyledTabText = styled(StyledText)`
   font-weight: 500;
   font-size: 0.95vw;
 `
+
+const fakeData = [{
+  'amount': 8700,
+  'price': 2,
+  'date': 1548364678,
+  'status': 'Pending'
+}, {
+  'amount': 1233,
+  'price': 0.9,
+  'date': 1548278278,
+  'status': 'Accepted'
+}, {
+  'amount': 81462,
+  'price': 1.2,
+  'date': 1547155078,
+  'status': 'Rejected'
+}]
 
 export default () => {
   const { useCacheCall, useCacheEvents } = useDrizzle()
@@ -130,6 +148,20 @@ export default () => {
         </Col>
       </Row>
       <BreakLine />
+      <Row style={{'margin': '45px 0px'}}>
+        <Col span={9}>
+          <StyledSubheading>My Bids</StyledSubheading>
+        </Col>
+        <Col span={15}>
+          <StyledSubtext>Add your ETH address to see your bids</StyledSubtext>
+          Search Bar...
+        </Col>
+      </Row>
+      <Row>
+        <Col span={24}>
+          <Table data={fakeData} />
+        </Col>
+      </Row>
     </div>
   )
 }
