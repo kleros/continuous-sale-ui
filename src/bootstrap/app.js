@@ -5,6 +5,7 @@ import { DrizzleProvider, Initializer } from '../temp/drizzle-react-hooks'
 import { Helmet } from 'react-helmet'
 import Home from '../containers/home'
 import { ReactComponent as Logo } from '../assets/images/logo.svg'
+import { StyledText } from '../components/typography'
 import React from 'react'
 import drizzle from './drizzle'
 import { register } from './service-worker'
@@ -13,24 +14,23 @@ import styled from 'styled-components/macro'
 const StyledCol = styled(Col)`
   align-items: center;
   display: flex;
-  height: 64px;
+  height: 60px;
   justify-content: space-evenly;
 `
 const StyledColRight = styled(Col)`
   align-items: right;
   color: white;
   display: flex;
-  height: 64px;
+  height: 60px;
   justify-content: space-evenly;
 `
 const StyledMenu = styled(Menu)`
-  font-weight: bold;
-  line-height: 64px !important;
+  line-height: 60px !important;
   text-align: center;
 `
 const StyledLayoutContent = styled(Layout.Content)`
-  background: white;
-  padding: 0 9.375vw;
+  background-color: transparent;
+  padding: 109px 7.575vw;
 `
 export default () => (
   <>
@@ -47,19 +47,19 @@ export default () => (
           <Layout>
             <Layout.Header>
               <Row>
-                <StyledCol span={4}>
+                <StyledCol span={3}>
                   <Logo />
                 </StyledCol>
-                <Col span={4}>
-                  <StyledMenu mode="horizontal" theme="dark">
-                    <Menu.Item key="home">
-                      <a href="https://kleros.io">Learn More About Kleros</a>
-                    </Menu.Item>
-                  </StyledMenu>
+                <Col span={3} offset={2}>
+                  <a href="https://kleros.io">
+                    <StyledText>Learn More About Kleros</StyledText>
+                  </a>
                 </Col>
                 <StyledColRight span={10} offset={6}>
-                  <div>Kleros Continuous Sale</div>
-                  <div>Start: March 1st 2019. End: March 1st 2020</div>
+                  <StyledText>Kleros Continuous Sale</StyledText>
+                  <StyledText>
+                    Start: March 1st 2019. End: March 1st 2020
+                  </StyledText>
                 </StyledColRight>
               </Row>
             </Layout.Header>

@@ -1,6 +1,14 @@
 @import '../../node_modules/antd/dist/antd.less';
 
 // -------- Colors -----------
+@blue-gradiant : linear-gradient(257.08deg, #1E075F 16.9%, #4D00B4 69.8%);
+@component-blue : rgba(255, 255, 255, 0.08);
+@text-color: #FFFFFF;
+@secondary-text-color: #A892C5;
+@button-blue : #009AFF;
+@rejected-red : #F60C36;
+
+// -------- Colors -----------
 @blue-6 : #009aff;
 @primary-color : @blue-6;
 @secondary-color : #060C2C;
@@ -13,7 +21,6 @@
 @warning-color : @gold-6;
 @normal-color : #d9d9d9;
 @other-color : #4a4a4a;
-@blue-gradiant : linear-gradient(257.08deg, #1E075F 16.9%, #4D00B4 69.8%);
 
 // Color used by default to control hover and active backgrounds and for
 // alert info backgrounds.
@@ -44,11 +51,11 @@ body {
   background: @blue-gradiant;
 }
 // Base background color for most components
-@component-background : @blue-gradiant;
+@component-background : @component-blue;
 @font-family : 'Roboto', sans-serif;
 @code-family : "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 @heading-color : fade(#000, 85%);
-@text-color : fade(#000, 65%);
+@text-color : fade(#FFF, 65%);
 @text-color-secondary : fade(#000, 45%);
 @heading-color-dark : fade(#fff, 100%);
 @text-color-dark : fade(#fff, 85%);
@@ -136,7 +143,7 @@ body {
 @btn-border-radius-sm : @border-radius-base;
 
 @btn-primary-color : #fff;
-@btn-primary-bg : @primary-color;
+@btn-primary-bg : @button-blue;
 
 @btn-default-color : @text-color;
 @btn-default-bg : #fff;
@@ -218,11 +225,11 @@ body {
 @grid-gutter-width : 0;
 
 // Layout
-@layout-body-background : #f0f2f5;
+@layout-body-background : transparent;
 @layout-header-background : @secondary-color;
 @layout-footer-background : @layout-body-background;
-@layout-header-height : 64px;
-@layout-header-padding : 0 50px;
+@layout-header-height : 60px;
+@layout-header-padding : 0 10px;
 @layout-footer-padding : 24px 50px;
 @layout-sider-background : @layout-header-background;
 @layout-trigger-height : 48px;
@@ -408,20 +415,24 @@ body {
 
 // Tabs
 // ---
-@tabs-card-head-background: @background-color-light;
-@tabs-card-height: 40px;
-@tabs-card-active-color: @primary-color;
+@tabs-card-head-background: #43009D;
+@tabs-card-head-border : none;
+@tabs-card-height : 40px;
+@tabs-card-active-color: #FFF;
+@tabs-card-active-background: @component-blue;
+@tabs-card-active-border-width : 0px 1px 1px 1px;
+@tabs-card-active-border-color : @button-blue;
 @tabs-title-font-size: @font-size-base;
 @tabs-title-font-size-lg: @font-size-lg;
 @tabs-title-font-size-sm: @font-size-base;
-@tabs-ink-bar-color: @primary-color;
+@tabs-ink-bar-color: #FFF;
 @tabs-bar-margin: 0 0 16px 0;
-@tabs-horizontal-margin: 0 32px 0 0;
+@tabs-horizontal-margin: 0 16px 0 0;
 @tabs-horizontal-padding: 12px 16px;
 @tabs-vertical-padding: 8px 24px;
 @tabs-vertical-margin: 0 0 16px 0;
 @tabs-scrolling-size: 32px;
-@tabs-highlight-color: @primary-color;
+@tabs-highlight-color: #FFF;
 @tabs-hover-color: @primary-5;
 @tabs-active-color: @primary-7;
 
@@ -539,87 +550,3 @@ body {
 @list-item-meta-margin-bottom: @padding-md;
 @list-item-meta-avatar-margin-right: @padding-md;
 @list-item-meta-title-margin-bottom: @padding-sm;
-
-// Custom Overrides
-.ant-badge-count {
-  background: @primary-color;
-  box-shadow: 0 0 0 1px @layout-header-background;
-}
-
-// Theme Colored
-@theme-colors: primary, secondary, ternary, info, success, processing, error,
-  highlight, warning, normal, other;
-.loop(@i : length(@theme-colors)) when (@i > 0) {
-  @name: extract(@theme-colors, @i);
-  @theme-color: ~'@{@{name}-color}';
-  .@{name} {
-    &-fill {
-      &.theme-fill,
-      & .theme-fill {
-        fill: @theme-color;
-      }
-    }
-    &-stroke {
-      &.theme-stroke,
-      & .theme-stroke {
-        stroke: @theme-color;
-      }
-    }
-    &-background {
-      &.theme-background,
-      & .theme-background,
-      & .ant-card-head {
-        background: @theme-color;
-      }
-    }
-    &-border-color {
-      &.theme-border-color,
-      & .theme-border-color {
-        border-color: @theme-color;
-      }
-    }
-    &-color {
-      &.theme-color,
-      & .theme-color,
-      & .ant-list-item-extra,
-      & time {
-        color: @theme-color;
-      }
-    }
-  }
-  .loop(@i - 1);
-}
-.loop();
-.secondary {
-  &-linear-background {
-    &.theme-linear-background,
-    & .theme-linear-background {
-      background: linear-gradient(to left, @secondary-color, @ternary-color);
-    }
-  }
-}
-
-// Time Ago Tooltip
-.rrui__tooltip {
-  background: @tooltip-bg !important;
-  color: @tooltip-color !important;
-  font-style: italic !important;
-  z-index: 2000 !important;
-}
-
-// React Minimal Pie Chart
-.ReactMinimalPieChart {
-  path {
-    &:nth-child(3n) {
-      stroke: @primary-color;
-    }
-
-    &:nth-child(3n + 1) {
-      stroke: @secondary-color;
-    }
-
-    &:nth-child(3n + 2) {
-      stroke: @ternary-color;
-    }
-  }
-}
