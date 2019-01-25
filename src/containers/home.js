@@ -14,6 +14,7 @@ import InformationCardsBox from '../components/information-cards-box'
 import Table from '../components/table'
 import ByAddressPane from '../components/tab-panes/by-address'
 import ByWeb3Browser from '../components/tab-panes/by-web3-browser'
+import ByInputData from '../components/tab-panes/by-input-data'
 import { useDrizzle, useDrizzleState } from '../temp/drizzle-react-hooks'
 
 const StyledCardContainer = styled.div`
@@ -118,7 +119,7 @@ export default () => {
                 tab={<StyledTabText>by Inputing Data</StyledTabText>}
                 key={3}
               >
-                inputing data
+                <ByInputData />
               </Tabs.TabPane>
             </Tabs>
           </StyledCardContainer>
