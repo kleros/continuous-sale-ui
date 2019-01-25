@@ -12,6 +12,8 @@ import {
 import BreakLine from '../components/break-line'
 import InformationCardsBox from '../components/information-cards-box'
 import Table from '../components/table'
+import ByAddressPane from '../components/tab-panes/by-address'
+import ByWeb3Browser from '../components/tab-panes/by-web3-browser'
 import { useDrizzle, useDrizzleState } from '../temp/drizzle-react-hooks'
 
 const StyledCardContainer = styled.div`
@@ -19,11 +21,11 @@ const StyledCardContainer = styled.div`
 
   .ant-tabs-card {
     .ant-tabs-content {
-      height: 120px;
+      height: 515px;
+      background: rgba(255, 255, 255, 0.08);
 
       .ant-tabs-tabpane {
         padding: 16px;
-        background: rgba(255, 255, 255, 0.08);
       }
     }
     .ant-tabs-bar {
@@ -88,7 +90,7 @@ const fakeData = [{
 }]
 
 export default () => {
-  const { useCacheCall, useCacheEvents } = useDrizzle()
+  const { useCacheCall } = useDrizzle()
   const drizzleState = useDrizzleState(drizzleState => ({
     account: drizzleState.accounts[0]
   }))
@@ -104,13 +106,13 @@ export default () => {
                 tab={<StyledTabText>by Address</StyledTabText>}
                 key={1}
               >
-                Address stuff goes here
+                <ByAddressPane contributionAddress={'0x77xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxAA'}/>
               </Tabs.TabPane>
               <Tabs.TabPane
                 tab={<StyledTabText>by Web3 Wallet</StyledTabText>}
                 key={2}
               >
-                Web3 Wallet
+                <ByWeb3Browser />
               </Tabs.TabPane>
               <Tabs.TabPane
                 tab={<StyledTabText>by Inputing Data</StyledTabText>}

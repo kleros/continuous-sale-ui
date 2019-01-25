@@ -15,7 +15,6 @@ export const StyledSubtext = styled.p`
 
 export const StyledValueText = styled.p`
   font-size: 18px;
-  font-weight: normal;
   color: #ffffff;
 `
 

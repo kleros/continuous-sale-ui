@@ -35,7 +35,7 @@
 @primary-5: color(
   ~`colorPalette('@{primary-color}', 5) `
 ); // color used to control the text color in many active and hover states, replace tint(@primary-color, 20%)
-@primary-6: @primary-color; // color used to control the text color of active buttons, don't use, use @primary-color
+@primary-6: @button-blue; // color used to control the text color of active buttons, don't use, use @primary-color
 @primary-7: color(
   ~`colorPalette('@{primary-color}', 7) `
 ); // replace shade(@primary-color, 5%)
@@ -139,15 +139,15 @@ body {
 
 // Buttons
 @btn-font-weight : 400;
-@btn-border-radius-base : @border-radius-base;
-@btn-border-radius-sm : @border-radius-base;
+@btn-border-radius-base : 0px;
+@btn-border-radius-sm : 0px;
 
-@btn-primary-color : #fff;
+@btn-primary-color : @button-blue;
 @btn-primary-bg : @button-blue;
 
-@btn-default-color : @text-color;
-@btn-default-bg : #fff;
-@btn-default-border : @border-color-base;
+@btn-default-color : @button-blue;
+@btn-default-bg : @button-blue;
+@btn-default-border : transparent;
 
 @btn-danger-color : @error-color;
 @btn-danger-bg : @background-color-base;
@@ -174,8 +174,8 @@ body {
 @btn-group-border : @primary-5;
 
 // Checkbox
-@checkbox-size : 16px;
-@checkbox-color : @primary-color;
+@checkbox-size : 12px;
+@checkbox-color : #fff;
 @checkbox-check-color : #fff;
 
 // Radio
