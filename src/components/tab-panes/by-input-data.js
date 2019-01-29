@@ -1,9 +1,10 @@
 import { Input, Row, Col, Checkbox, Button } from 'antd'
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components/macro'
 
 import { useDrizzle, useDrizzleState } from '../../temp/drizzle-react-hooks'
 import { StyledText, StyledValueText, StyledSubtext } from '../typography'
+import { ethToWei } from '../../utils/numbers'
 
 const StyledPane = styled.div`
   text-align: center;
@@ -61,69 +62,67 @@ const StyledButton = styled(Button)`
 `
 
 const ByInputData = () => {
-  const { useCacheCall } = useDrizzle()
-  const drizzleState = useDrizzleState(drizzleState => ({
-    web3Status: drizzleState.web3.status
-  }))
-  // Unlock metamask message
-  const unlockMetaMask =
-    (drizzleState.web3Status !== 'failed')
-    ? null
-    : 'Unlock MetaMask to submit a bid'
+  const { useCacheCall, drizzle } = useDrizzle()
 
-  const submitDisabled = true
+  const [ maxPricePNK, setMaxPricePNK ] = useState(null)
 
-  const maxValInputsRef = useRef(null)
+  // Get all vars from contract.
+  const INFINITY = useCacheCall('ContinuousICO', 'INFINITY')
+  const lastBid = useCacheCall('ContinuousICO', 'globalLastBidID')
+  const currentSubsaleNumber = useCacheCall('ContinuousICO', 'getOngoingSubsaleNumber')
+  const tokensForSale = useCacheCall('ContinuousICO', 'tokensForSale')
+  const numberOfSubsales = useCacheCall('ContinuousICO', 'numberOfSubsales')
+  // Get search position once our other vars have been set/loaded.
+  let searchStart = null
+  let maxVal = null
+  if (currentSubsaleNumber && lastBid && tokensForSale && numberOfSubsales) {
+    const amountForSaleToday = drizzle.web3.utils.toBN(tokensForSale).div(drizzle.web3.utils.toBN(numberOfSubsales))
+    maxVal = amountForSaleToday.mul(drizzle.web3.utils.toBN(maxPricePNK || INFINITY)).div(drizzle.web3.utils.toBN(ethToWei(1))).toString() // convert price per pnk to total ETH contributed
+    searchStart = useCacheCall('ContinuousICO', 'search', currentSubsaleNumber, maxVal, lastBid)
+  }
 
-  function maxValChecked(e) {
-    if (e.target.checked)
-      maxValInputsRef.current.style.display = 'inline-block'
-    else
-      maxValInputsRef.current.style.display = 'none'
+  let dataString = ''
+  if (searchStart && maxVal) {
+    dataString = drizzle.web3.eth.abi.encodeFunctionCall(
+      {
+        name: 'searchAndBidToOngoingSubsale',
+        type: 'function',
+        inputs: [{
+          type: 'uint256',
+          name: '_maxValuation'
+        }, {
+          type: 'uint256',
+          name: '_next'
+        }]
+      }, [maxVal, searchStart]
+    )
+  }
+
+  function maxValueChange (e) {
+    const value = e.target.value
+    if (value) setMaxPricePNK(ethToWei(value))
+    else setMaxPricePNK(null)
   }
 
   return (
     <StyledPane>
-      <StyledText style={{'margin-top' : '30px', 'padding' : '0px 20px'}}>Making a transaction by inputting the transaction data on MEW or Parity</StyledText>
+      <StyledText style={{'margin-top' : '30px', 'padding' : '0px 20px'}}>Make a transaction by inputting the transaction data on MEW or Parity</StyledText>
       <Row style={{'margin-top' : '30px'}}>
         <Col offset={4} span={20}>
-          <InputLabel><StyledText>Amount to bid</StyledText></InputLabel>
+          <InputLabel><StyledText>Maximum Price per PNK</StyledText></InputLabel>
         </Col>
       </Row>
       <Row>
         <Col offset={4} span={14}>
-          <StyledInput id='amount' type='number' placeholder={0} />
+          <StyledInput id='amount' type='number' placeholder={'INFINITY'} onChange={ maxValueChange }/>
         </Col>
         <Col offset={1} span={2}>
           <StyledValueText>ETH</StyledValueText>
         </Col>
       </Row>
       <Row>
-        <Col offset={4} span={13}>
-          <StyledSubtext style={{'text-align' : 'right', 'margin-right': '9px'}}>With Maximum Price per PNK</StyledSubtext>
-        </Col>
-        <Col span={1}>
-          <StyledCheckbox type='checkbox' onChange={maxValChecked} />
-        </Col>
+       <StyledInput type='textinput' value={dataString} placeholder={'loading...'}/>
       </Row>
-      <MaxPrice className='maxPrice'>
-        <div className='maxPrice-inputs' ref={maxValInputsRef}>
-          <Row style={{'margin-top' : '30px'}}>
-            <Col offset={4} span={20}>
-              <InputLabel><StyledText>Maximum Price per PNK</StyledText></InputLabel>
-            </Col>
-          </Row>
-          <Row>
-            <Col offset={4} span={14}>
-              <StyledInput id='amount' type='number' placeholder={0} />
-            </Col>
-            <Col offset={1} span={2}>
-              <StyledValueText>ETH</StyledValueText>
-            </Col>
-          </Row>
-        </div>
-      </MaxPrice>
-
     </StyledPane>
   )
 }
