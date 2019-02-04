@@ -1,7 +1,8 @@
 import { Table } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components/macro'
 
+import { useDrizzle, useDrizzleState } from '../temp/drizzle-react-hooks'
 import MonthAbreviations from '../utils/month-abreviations'
 
 const StyledTable = styled(Table)`
@@ -98,5 +99,24 @@ const getDateFromTimestamp = (ts) => {
 }
 
 export default ({
-  data
-}) => (<StyledTable columns={columns} dataSource={data} />)
+  bidIDs
+}) => {
+  const { useCacheCall, drizzle } = useDrizzle()
+  const [ columnData, setColumnData ] = useState([])
+
+  for (let i = 0; i < bidIDs.length; i++) {
+    // setColumnData(columnData[i] = {
+    //   title: 'loading...'
+    // })
+    //
+    // useCacheCall(['ContinuousICO'], async (call) => {
+    //   const bid = await call('ContinuousICO', 'bids', bidIDs[i])
+    //   console.log(bid)
+    //   return setColumnData(columnData[i] = {
+    //     title: 'found...'
+    //   })
+    // })
+  }
+
+  return (<StyledTable columns={columns} dataSource={columnData} />)
+}

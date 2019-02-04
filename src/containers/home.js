@@ -1,5 +1,5 @@
 import { Button, Col, Divider, Radio, Row, Tabs } from 'antd'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components/macro'
 
 import {
@@ -16,6 +16,7 @@ import ByAddressPane from '../components/tab-panes/by-address'
 import ByWeb3Browser from '../components/tab-panes/by-web3-browser'
 import ByInputData from '../components/tab-panes/by-input-data'
 import { useDrizzle, useDrizzleState } from '../temp/drizzle-react-hooks'
+import { weiToEth, ethToWei, truncateDecimalString } from '../utils/numbers'
 
 const StyledCardContainer = styled.div`
   margin-top: 25px;
@@ -91,14 +92,61 @@ const fakeData = [{
 }]
 
 export default () => {
-  const { useCacheCall } = useDrizzle()
-  const drizzleState = useDrizzleState(drizzleState => ({
-    account: drizzleState.accounts[0]
-  }))
+  const { useCacheCall, drizzle } = useDrizzle()
+  const drizzleState = useDrizzleState(drizzleState => {
+    return ({
+      loaded: drizzleState.drizzleStatus.initialized,
+      account: drizzleState.accounts[0]
+    })
+  })
+
+  const [ account, setAccount ] = useState(drizzleState.account)
+
+  // Set account when drizzle state loads
+  useEffect(() => {
+    setAccount(drizzleState.account)
+  }, [drizzleState.account])
+
+  let tokensForSale
+  let numberOfSubsales
+  let currentSubsaleNumber
+  let valuationAndCutOff
+  let startTime
+  let secondsPerSubsale
+  let bidIDs = []
+  if (drizzleState.loaded) {
+   tokensForSale = useCacheCall('ContinuousICO', 'tokensForSale')
+   numberOfSubsales = useCacheCall('ContinuousICO', 'numberOfSubsales')
+   currentSubsaleNumber = useCacheCall('ContinuousICO', 'getOngoingSubsaleNumber')
+   valuationAndCutOff = currentSubsaleNumber && useCacheCall('ContinuousICO', 'valuationAndCutOff', currentSubsaleNumber)
+   startTime = useCacheCall('ContinuousICO', 'startTime')
+   secondsPerSubsale = useCacheCall('ContinuousICO', 'secondsPerSubsale')
+   bidIDs = (account && useCacheCall('ContinuousICO', 'getBidIdsForContributor', account, 'false')) || []
+  }
+
+  const amountForSaleToday = drizzleState.loaded
+    && numberOfSubsales
+    && tokensForSale
+    && drizzle.web3.utils.toBN(tokensForSale)
+      .div(drizzle.web3.utils.toBN(numberOfSubsales))
+
+  const currentPricePerPNK = valuationAndCutOff && ethToWei(drizzle.web3.utils.toBN(valuationAndCutOff.valuation)).div(amountForSaleToday)
+
+  const timeRemaining =  secondsPerSubsale && startTime && currentSubsaleNumber&& (startTime + (secondsPerSubsale * (currentSubsaleNumber + 1))) - (new Date().getTime() / 1000)
+
+  if (currentPricePerPNK) {
+    // console.log(valuationAndCutOff.valuation)
+    // console.log(amountForSaleToday.toString())
+    // console.log(currentPricePerPNK.toString())
+  }
+
+  function getBidsForAccount(account) {
+
+  }
 
   return (
     <div>
-      <Row style={{'margin-bottom': '76px'}}>
+      <Row style={{'marginBottom': '76px'}}>
         <Col span={9}>
           <StyledSubheading>Contribution Options</StyledSubheading>
           <StyledCardContainer>
@@ -107,7 +155,13 @@ export default () => {
                 tab={<StyledTabText>by Address</StyledTabText>}
                 key={1}
               >
-                <ByAddressPane contributionAddress={'0x77xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxAA'}/>
+                <ByAddressPane
+                  contributionAddress={
+                    drizzle.contracts['ContinuousICO']
+                    ? drizzle.contracts['ContinuousICO'].address
+                    : 'loading...'
+                  }
+                />
               </Tabs.TabPane>
               <Tabs.TabPane
                 tab={<StyledTabText>by Web3 Wallet</StyledTabText>}
@@ -128,22 +182,22 @@ export default () => {
           <StyledHeading>
             Kleros Pinakion (PNK) Token Distribution
           </StyledHeading>
-          <StyledText style={{ 'margin-bottom': '18px' }}>
+          <StyledText style={{ 'marginBottom': '18px' }}>
             Kleros Continuous Sale: 12% of the token supply is to be sold over a
             12-month period in daily auction
           </StyledText>
           <BreakLine />
-          <StyledSubheading style={{ 'margin-top': '34px' }}>
+          <StyledSubheading style={{ 'marginTop': '34px' }}>
             Daily Auction
           </StyledSubheading>
           <InformationCardsBox
-            textMain={"XXXX PNK"}
+            textMain={amountForSaleToday ? truncateDecimalString(weiToEth(amountForSaleToday).toString(), 2) + ' PNK': 'loading...'}
             subtextMain={"Amount for Sale"}
-            textSecondary={"XXXX ETH"}
+            textSecondary={valuationAndCutOff ? truncateDecimalString(weiToEth(valuationAndCutOff.valuation), 5) + ' ETH' : 'loading...'}
             subtextSecondary={"ETH Contributed Today"}
           />
           <InformationCardsBox
-            textMain={"XXXX ETH"}
+            textMain={currentPricePerPNK ? truncateDecimalString(weiToEth(currentPricePerPNK).toString(), 8) + ' ETH' : 'loading...'}
             subtextMain={"PNK price if no other bids are made"}
             textSecondary={"12:21"}
             subtextSecondary={"Remaining Time"}
@@ -162,7 +216,7 @@ export default () => {
       </Row>
       <Row>
         <Col span={24}>
-          <Table data={fakeData} />
+          <Table bidIDs={bidIDs || []} />
         </Col>
       </Row>
     </div>

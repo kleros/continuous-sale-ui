@@ -1,9 +1,10 @@
 import { Input, Row, Col, Checkbox, Button } from 'antd'
-import React, { useRef } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components/macro'
 
 import { useDrizzle, useDrizzleState } from '../../temp/drizzle-react-hooks'
 import { StyledText, StyledValueText, StyledSubtext } from '../typography'
+import { ethToWei } from '../../utils/numbers'
 
 const StyledPane = styled.div`
   text-align: center;
@@ -61,38 +62,84 @@ const StyledButton = styled(Button)`
 `
 
 const ByWeb3Browser = () => {
-  const { useCacheCall } = useDrizzle()
+  const [ test, setTest ] = useState(0)
+  const [ maxPricePNK, setMaxPricePNK ] = useState(null)
+
+  const { useCacheCall, drizzle, useCacheSend } = useDrizzle()
   const drizzleState = useDrizzleState(drizzleState => ({
-    web3Status: drizzleState.web3.status
+    web3Status: drizzleState.web3.status,
+    account: drizzleState.accounts[0]
   }))
+
+  // Get all vars from contract.
+  const INFINITY = useCacheCall('ContinuousICO', 'INFINITY')
+  const lastBid = useCacheCall('ContinuousICO', 'globalLastBidID')
+  const currentSubsaleNumber = useCacheCall('ContinuousICO', 'getOngoingSubsaleNumber')
+  const tokensForSale = useCacheCall('ContinuousICO', 'tokensForSale')
+  const numberOfSubsales = useCacheCall('ContinuousICO', 'numberOfSubsales')
+
+  const amountForSaleToday = tokensForSale && numberOfSubsales && drizzle.web3.utils.toBN(tokensForSale).div(drizzle.web3.utils.toBN(numberOfSubsales))
+  const maxVal = amountForSaleToday && INFINITY && (amountForSaleToday.mul(maxPricePNK ? drizzle.web3.utils.toBN(ethToWei(maxPricePNK)) : drizzle.web3.utils.toBN(INFINITY))).div(drizzle.web3.utils.toBN(ethToWei("1"))).toString() // convert price per pnk to total ETH contributed
+  const searchStart = currentSubsaleNumber && maxVal && lastBid && useCacheCall('ContinuousICO', 'search', currentSubsaleNumber, maxVal, lastBid)
+
+  // Send bid
+  const { send, status } = useCacheSend('ContinuousICO', 'searchAndBidToOngoingSubsale')
+
   // Unlock metamask message
   const unlockMetaMask =
     (drizzleState.web3Status !== 'failed')
     ? null
     : 'Unlock MetaMask to submit a bid'
 
-  const submitDisabled = true
+  const submitDisabled = false
 
-  const maxValInputsRef = useRef(null)
+  const maxValViewRef = useRef(null)
+  const maxValInputRef = useRef(null)
+  const amountToContributeRef = useRef(null)
 
   function maxValChecked(e) {
-    if (e.target.checked)
-      maxValInputsRef.current.style.display = 'inline-block'
-    else
-      maxValInputsRef.current.style.display = 'none'
+    if (e.target.checked) {
+      maxValViewRef.current.style.display = 'inline-block'
+      maxValueChange(maxValInputRef.current.state.value)
+    }
+    else {
+      maxValViewRef.current.style.display = 'none'
+      maxValueChange(null)
+    }
+  }
+
+  function submitTransaction() {
+    const amountWei = ethToWei(amountToContributeRef.current.state.value)
+    console.log(maxVal)
+
+    if (!maxPricePNK) {
+      // use fallback function if no max price
+      drizzle.web3.eth.sendTransaction({
+        from: drizzleState.account,
+        to: drizzle.contracts['ContinuousICO'].address,
+        value: amountWei
+      })
+    } else {
+      send(maxVal, searchStart, { value: amountWei })
+    }
+  }
+
+  function maxValueChange (value) {
+    if (value) setMaxPricePNK(value.toString())
+    else setMaxPricePNK(null)
   }
 
   return (
     <StyledPane>
-      <StyledText style={{'margin-top' : '30px'}}>Make a transaction with a web3 wallet</StyledText>
-      <Row style={{'margin-top' : '30px'}}>
+      <StyledText style={{'marginTop' : '30px'}}>Make a transaction with a web3 wallet</StyledText>
+      <Row style={{'marginTop' : '30px'}}>
         <Col offset={4} span={20}>
           <InputLabel><StyledText>Amount to bid</StyledText></InputLabel>
         </Col>
       </Row>
       <Row>
         <Col offset={4} span={14}>
-          <StyledInput id='amount' type='number' placeholder={0} />
+          <StyledInput id='amount' type='number' placeholder={0} ref={amountToContributeRef} />
         </Col>
         <Col offset={1} span={2}>
           <StyledValueText>ETH</StyledValueText>
@@ -100,22 +147,23 @@ const ByWeb3Browser = () => {
       </Row>
       <Row>
         <Col offset={4} span={13}>
-          <StyledSubtext style={{'text-align' : 'right', 'margin-right': '9px'}}>With Maximum Price per PNK</StyledSubtext>
+          <StyledSubtext style={{'textAlign' : 'right', 'marginRight': '9px'}}>With Maximum Price per PNK</StyledSubtext>
         </Col>
         <Col span={1}>
           <StyledCheckbox type='checkbox' onChange={maxValChecked} />
         </Col>
       </Row>
       <MaxPrice className='maxPrice'>
-        <div className='maxPrice-inputs' ref={maxValInputsRef}>
-          <Row style={{'margin-top' : '30px'}}>
+        <div className='maxPrice-inputs' ref={maxValViewRef}>
+          <Row style={{'marginTop' : '30px'}}>
             <Col offset={4} span={20}>
               <InputLabel><StyledText>Maximum Price per PNK</StyledText></InputLabel>
             </Col>
           </Row>
           <Row>
             <Col offset={4} span={14}>
-              <StyledInput id='amount' type='number' placeholder={0} />
+              <StyledInput id='amount' type='number' placeholder={0} ref={maxValInputRef} onChange={(e) => maxValueChange(e.target.value)}
+            />
             </Col>
             <Col offset={1} span={2}>
               <StyledValueText>ETH</StyledValueText>
@@ -123,12 +171,12 @@ const ByWeb3Browser = () => {
           </Row>
         </div>
       </MaxPrice>
-      <Row style={{'margin-top' : '100px'}}>
+      <Row style={{'marginTop' : '100px'}}>
         <Col offset={4} span={14}>
-          <StyledButton disabled={submitDisabled}>Submit Bid</StyledButton>
+          <StyledButton disabled={submitDisabled} onClick={submitTransaction}>Submit Bid</StyledButton>
         </Col>
       </Row>
-      <Row style={{'margin-top' : '5px'}}>
+      <Row style={{'marginTop' : '5px'}}>
         <Col offset={4} span={14}>
           { unlockMetaMask }
         </Col>

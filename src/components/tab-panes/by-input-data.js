@@ -73,13 +73,9 @@ const ByInputData = () => {
   const tokensForSale = useCacheCall('ContinuousICO', 'tokensForSale')
   const numberOfSubsales = useCacheCall('ContinuousICO', 'numberOfSubsales')
   // Get search position once our other vars have been set/loaded.
-  let searchStart = null
-  let maxVal = null
-  if (currentSubsaleNumber && lastBid && tokensForSale && numberOfSubsales) {
-    const amountForSaleToday = drizzle.web3.utils.toBN(tokensForSale).div(drizzle.web3.utils.toBN(numberOfSubsales))
-    maxVal = amountForSaleToday.mul(drizzle.web3.utils.toBN(maxPricePNK || INFINITY)).div(drizzle.web3.utils.toBN(ethToWei(1))).toString() // convert price per pnk to total ETH contributed
-    searchStart = useCacheCall('ContinuousICO', 'search', currentSubsaleNumber, maxVal, lastBid)
-  }
+  const amountForSaleToday = tokensForSale && numberOfSubsales && drizzle.web3.utils.toBN(tokensForSale).div(drizzle.web3.utils.toBN(numberOfSubsales))
+  const maxVal = amountForSaleToday && INFINITY && (amountForSaleToday.mul(maxPricePNK ? drizzle.web3.utils.toBN(ethToWei(maxPricePNK)) : drizzle.web3.utils.toBN(INFINITY))).div(drizzle.web3.utils.toBN(ethToWei("1"))).toString() // convert price per pnk to total ETH contributed
+  const searchStart = currentSubsaleNumber && maxVal && lastBid && useCacheCall('ContinuousICO', 'search', currentSubsaleNumber, maxVal, lastBid)
 
   let dataString = ''
   if (searchStart && maxVal) {
@@ -106,8 +102,8 @@ const ByInputData = () => {
 
   return (
     <StyledPane>
-      <StyledText style={{'margin-top' : '30px', 'padding' : '0px 20px'}}>Make a transaction by inputting the transaction data on MEW or Parity</StyledText>
-      <Row style={{'margin-top' : '30px'}}>
+      <StyledText style={{'marginTop' : '30px', 'padding' : '0px 20px'}}>Make a transaction by inputting the transaction data on MEW or Parity</StyledText>
+      <Row style={{'marginTop' : '30px'}}>
         <Col offset={4} span={20}>
           <InputLabel><StyledText>Maximum Price per PNK</StyledText></InputLabel>
         </Col>

@@ -37,7 +37,7 @@ const InformationCardsBox = ({
   subtextSecondary
 }) => {
   return (
-    <div style={{"margin-top": "36px"}}>
+    <div style={{"marginTop": "36px"}}>
       <Row>
         <Col span={12}>
           <StyledCardMiddleLine>

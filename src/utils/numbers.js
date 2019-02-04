@@ -1,1 +1,20 @@
-export const ethToWei = decimal => decimal * (10**18)
+import { toWei, fromWei } from 'web3-utils'
+
+
+export const ethToWei = decimal => {
+  return toWei(decimal)
+}
+
+export const weiToEth = weiString => {
+  return fromWei(weiString, 'ether')
+}
+
+export const truncateDecimalString = (decimalString, decimalPoints) => {
+  const decimalIndex = decimalString.indexOf('.')
+  const cutOffPoint = decimalIndex + decimalPoints + 1
+  if (decimalIndex > 0 && decimalString.length > cutOffPoint) {
+    decimalString = decimalString.substring(0, cutOffPoint)
+  }
+
+  return decimalString
+}

@@ -43,7 +43,7 @@ const ByAddressPane = ({
 
   return (
     <StyledPane>
-      <StyledText style={{'margin-top' : '30px', 'margin-bottom' : '34px'}}>
+      <StyledText style={{'marginTop' : '30px', 'marginBottom' : '34px'}}>
         Send ETH directly to the following address<sup>*</sup>
       </StyledText>
       <QRCode
@@ -53,7 +53,7 @@ const ByAddressPane = ({
       />
       <StyledValueText>{contributionAddress}</StyledValueText>
       <StyledButton onClick={CopyToClipboard}>{state.buttonText}</StyledButton>
-      <StyledText style={{'padding': '0px 54px', 'margin-top': '35px'}}><sup>*</sup>This leads to a bid without max price which is guaranteed to be executed</StyledText>
+      <StyledText style={{'padding': '0px 54px', 'marginTop': '35px'}}><sup>*</sup>This leads to a bid without max price which is guaranteed to be executed</StyledText>
     </StyledPane>
   )
 }
