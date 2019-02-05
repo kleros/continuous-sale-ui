@@ -183,7 +183,7 @@ export default () => {
         )
       : { loading: true, loadingValAndCutOffs: true, bids: [], valAndCutOffForSubsale: {}, IDs: {}, subsaleIDs: {} }
     )
-
+  console.log(bids.bids)
   const columnData = []
   if (!bids.loading && !bids.loadingValAndCutOffs && amountForSaleToday && currentPricePerPNK && INFINITY && startTime && secondsPerSubsale) {
     for (let i=0; i<bids.bids.length; i++){
@@ -197,13 +197,10 @@ export default () => {
 
       const valAndCutOff = bids.valAndCutOffForSubsale[_bid.subsaleNumber]
       // currentCutOffBidMaxValuation will come back as 0 if all bids are accepted
-      const currentCutOffBidMaxValuation = valAndCutOff.currentCutOffBidMaxValuation === '0' ? INFINITY : valAndCutOff.currentCutOffBidMaxValuation
+      const currentCutOffBidMaxValuation = valAndCutOff.currentCutOffBidMaxValuation
 
       let contrib = 0
-      if (currentCutOffBidMaxValuation === INFINITY) { // all bids are accepted this round
-        contrib = _bid.contrib
-      }
-      else if (toBN(_bid.maxValuation).gt(toBN(currentCutOffBidMaxValuation))) {
+      if (toBN(_bid.maxValuation).gt(toBN(currentCutOffBidMaxValuation))) {
         contrib = _bid.contrib
       }
       else if (toBN(_bid.maxValuation).eq(toBN(currentCutOffBidMaxValuation))) {

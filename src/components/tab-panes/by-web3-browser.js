@@ -87,9 +87,9 @@ const ByWeb3Browser = () => {
 
   // Unlock metamask message
   const unlockMetaMask =
-    (drizzleState.web3Status !== 'failed')
-    ? null
-    : 'Unlock MetaMask to submit a bid'
+    (drizzleState.web3Status === 'failed' || !drizzleState.account)
+    ? 'Unlock MetaMask to submit a bid'
+    : null
 
   const submitDisabled = false
 
