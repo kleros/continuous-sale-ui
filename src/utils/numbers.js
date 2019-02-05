@@ -2,11 +2,11 @@ import { toWei, fromWei } from 'web3-utils'
 
 
 export const ethToWei = decimal => {
-  return toWei(decimal.toString())
+  return toWei(decimal)
 }
 
 export const weiToEth = weiString => {
-  return fromWei(weiString.toString(), 'ether')
+  return fromWei(weiString, 'ether')
 }
 
 export const truncateDecimalString = (decimalString, decimalPoints) => {

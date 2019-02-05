@@ -156,7 +156,7 @@ export default () => {
     && toBN(tokensForSale)
       .div(toBN(numberOfSubsales))
 
-  const currentPricePerPNK = valuationAndCutOff && amountForSaleToday && ethToWei(toBN(valuationAndCutOff.valuation.toString())).div(amountForSaleToday)
+  const currentPricePerPNK = valuationAndCutOff && amountForSaleToday && toBN(ethToWei(valuationAndCutOff.valuation.toString())).div(amountForSaleToday)
 
   const secondsNow = parseInt(new Date().getTime() / 1000)
   const nextSubsaleStart = secondsPerSubsale &&
@@ -241,7 +241,7 @@ export default () => {
         bidColData.status = <StyledRejected />
       }
 
-      bidColData.amount = truncateDecimalString(weiToEth(amountForSaleToday.mul(toBN(contrib.toString())).div(toBN(valAndCutOff.valuation))).toString(), 0)
+      bidColData.amount = truncateDecimalString(weiToEth(amountForSaleToday.mul(toBN(contrib.toString())).div(toBN(valAndCutOff.valuation.toString())).toString()), 0)
 
       bidColData.price = weiToEth(bids.bids[i].contrib.toString())
 
@@ -302,13 +302,13 @@ export default () => {
             Daily Auction
           </StyledSubheading>
           <InformationCardsBox
-            textMain={amountForSaleToday ? truncateDecimalString(weiToEth(amountForSaleToday).toString(), 2) + ' PNK': 'loading...'}
+            textMain={amountForSaleToday ? truncateDecimalString(weiToEth(amountForSaleToday.toString()), 2) + ' PNK': 'loading...'}
             subtextMain={"Amount for Sale"}
-            textSecondary={valuationAndCutOff ? truncateDecimalString(weiToEth(valuationAndCutOff.valuation), 5) + ' ETH' : 'loading...'}
+            textSecondary={valuationAndCutOff ? truncateDecimalString(weiToEth(valuationAndCutOff.valuation.toString()), 5) + ' ETH' : 'loading...'}
             subtextSecondary={"ETH Contributed Today"}
           />
           <InformationCardsBox
-            textMain={currentPricePerPNK ? truncateDecimalString(weiToEth(currentPricePerPNK).toString(), 8) + ' ETH' : 'loading...'}
+            textMain={currentPricePerPNK ? truncateDecimalString(weiToEth(currentPricePerPNK.toString()), 8) + ' ETH' : 'loading...'}
             subtextMain={"PNK price if no other bids are made"}
             textSecondary={<div>
               {secondsRemaining ? `${('0' + Math.floor(secondsRemaining/3600)).slice(-2)}:${('0' + Math.floor(secondsRemaining/60) % 60).slice(-2)}` : 'loading...'}

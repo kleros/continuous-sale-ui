@@ -4,7 +4,6 @@ import styled from 'styled-components/macro'
 
 import { useDrizzle, useDrizzleState } from '../temp/drizzle-react-hooks'
 import MonthAbreviations from '../utils/month-abreviations'
-import { weiToEth } from '../utils/numbers'
 
 const StyledTable = styled(Table)`
   .ant-table-content {
