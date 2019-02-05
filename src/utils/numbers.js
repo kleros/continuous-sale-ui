@@ -2,7 +2,7 @@ import { toWei, fromWei } from 'web3-utils'
 
 
 export const ethToWei = decimal => {
-  return toWei(decimal)
+  return toWei(decimal.toString())
 }
 
 export const weiToEth = weiString => {

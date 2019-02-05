@@ -156,7 +156,7 @@ export default () => {
     && toBN(tokensForSale)
       .div(toBN(numberOfSubsales))
 
-  const currentPricePerPNK = valuationAndCutOff && amountForSaleToday && ethToWei(toBN(valuationAndCutOff.valuation)).div(amountForSaleToday)
+  const currentPricePerPNK = valuationAndCutOff && amountForSaleToday && ethToWei(toBN(valuationAndCutOff.valuation.toString())).div(amountForSaleToday)
 
   const secondsNow = parseInt(new Date().getTime() / 1000)
   const nextSubsaleStart = secondsPerSubsale &&
