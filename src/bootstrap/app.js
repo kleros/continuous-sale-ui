@@ -10,19 +10,38 @@ import React from 'react'
 import drizzle from './drizzle'
 import { register } from './service-worker'
 import styled from 'styled-components/macro'
+import media from "styled-media-query";
 
-const StyledCol = styled(Col)`
+const StyledLogoCol = styled(Col)`
   align-items: center;
   display: flex;
   height: 60px;
   justify-content: space-evenly;
 `
+
+const StyledLeftCol = styled(Col)`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  ${media.lessThan("768px")`
+    /* screen width is less than 768px (medium) */
+    display: none;
+  `}
+`
+
 const StyledColRight = styled(Col)`
   align-items: right;
   color: white;
   display: flex;
   height: 60px;
   justify-content: space-evenly;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  ${media.lessThan('992px')`
+    /* screen width is less than 768px (medium) */
+    display: none;
+  `}
 `
 const StyledMenu = styled(Menu)`
   line-height: 60px !important;
@@ -47,15 +66,15 @@ export default () => (
           <Layout>
             <Layout.Header>
               <Row>
-                <StyledCol span={3}>
+                <StyledLogoCol lg={3} md={6}>
                   <Logo />
-                </StyledCol>
-                <Col span={3} offset={2}>
+                </StyledLogoCol>
+                <StyledLeftCol lg={3} md={10} offset={2}>
                   <a href="https://kleros.io">
                     <StyledText>Learn More About Kleros</StyledText>
                   </a>
-                </Col>
-                <StyledColRight span={10} offset={6}>
+                </StyledLeftCol>
+                <StyledColRight lg={10} offset={6}>
                   <StyledText>Kleros Continuous Sale</StyledText>
                   <StyledText>
                     Start: March 1st 2019. End: March 1st 2020

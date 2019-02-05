@@ -102,5 +102,5 @@ const getDateFromTimestamp = (ts) => {
 export default ({
   columnData
 }) => {
-  return (<StyledTable columns={columns} dataSource={columnData} />)
+  return (<StyledTable columns={columns} dataSource={columnData} scroll={{ x: 'fit-content' }} />)
 }

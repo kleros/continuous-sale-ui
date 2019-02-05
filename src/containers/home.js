@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Radio, Row, Tabs } from 'antd'
+import { Button, Col, Divider, Radio, Row, Tabs, Input } from 'antd'
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components/macro'
 import { toBN } from 'web3-utils'
@@ -72,25 +72,16 @@ const StyledCardContainer = styled.div`
 
 const StyledTabText = styled(StyledText)`
   font-weight: 500;
-  font-size: 0.95vw;
+  font-size: 14px;
 `
 
-const fakeData = [{
-  'amount': 8700,
-  'price': 2,
-  'date': 1548364678,
-  'status': 'Pending'
-}, {
-  'amount': 1233,
-  'price': 0.9,
-  'date': 1548278278,
-  'status': 'Accepted'
-}, {
-  'amount': 81462,
-  'price': 1.2,
-  'date': 1547155078,
-  'status': 'Rejected'
-}]
+const StyledSearch = styled(Input.Search)`
+  .ant-input {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    height: 40px;
+  }
+`
 
 export default () => {
   const { useCacheCall, drizzle } = useDrizzle()
@@ -183,7 +174,7 @@ export default () => {
         )
       : { loading: true, loadingValAndCutOffs: true, bids: [], valAndCutOffForSubsale: {}, IDs: {}, subsaleIDs: {} }
     )
-  console.log(bids.bids)
+
   const columnData = []
   if (!bids.loading && !bids.loadingValAndCutOffs && amountForSaleToday && currentPricePerPNK && INFINITY && startTime && secondsPerSubsale) {
     for (let i=0; i<bids.bids.length; i++){
@@ -234,7 +225,7 @@ export default () => {
   return (
     <div>
       <Row style={{'marginBottom': '76px'}}>
-        <Col span={9}>
+        <Col lg={9}>
           <StyledSubheading>Contribution Options</StyledSubheading>
           <StyledCardContainer>
             <Tabs type="card">
@@ -265,7 +256,7 @@ export default () => {
             </Tabs>
           </StyledCardContainer>
         </Col>
-        <Col span={13} offset={1}>
+        <Col lg={13} offset={1}>
           <StyledHeading>
             Kleros Pinakion (PNK) Token Distribution
           </StyledHeading>
@@ -293,16 +284,16 @@ export default () => {
       </Row>
       <BreakLine />
       <Row style={{'margin': '45px 0px'}}>
-        <Col span={9}>
+        <Col lg={9}>
           <StyledSubheading>My Bids</StyledSubheading>
         </Col>
-        <Col span={15}>
+        <Col lg={15}>
           <StyledSubtext>Add your ETH address to see your bids</StyledSubtext>
-          Search Bar...
+          <StyledSearch enterButton="Go" placeholder="0x..." onSearch={(e) => {console.log(e); setAccount(e)}}/>
         </Col>
       </Row>
       <Row>
-        <Col span={24}>
+        <Col lg={24}>
           <Table columnData={columnData} />
         </Col>
       </Row>

@@ -4,13 +4,24 @@ import styled from 'styled-components/macro'
 
 import { StyledSubheading, StyledText } from './typography'
 
-const StyledCard = styled(Card)`
+const StyledRow = styled(Row)`
   background: rgba(255, 255, 255, 0.08);
+
+  .ant-card {
+    background: none;
+  }
+`
+
+const StyledCard = styled(Card)`
   border: none;
   padding: 16px;
 
-  .ant-card-body {
-    padding: 0px;
+  .ant-card {
+    background: none;
+
+    &-body {
+      padding: 0px;
+    }
   }
 `
 
@@ -38,7 +49,7 @@ const InformationCardsBox = ({
 }) => {
   return (
     <div style={{"marginTop": "36px"}}>
-      <Row>
+      <StyledRow>
         <Col span={12}>
           <StyledCardMiddleLine>
             <Heading>{textMain}</Heading>
@@ -51,7 +62,7 @@ const InformationCardsBox = ({
             <Subtext>{subtextSecondary}</Subtext>
           </StyledCard>
         </Col>
-      </Row>
+      </StyledRow>
     </div>
   )
 }
