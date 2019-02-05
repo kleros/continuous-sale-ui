@@ -241,9 +241,9 @@ export default () => {
         bidColData.status = <StyledRejected />
       }
 
-      bidColData.amount = truncateDecimalString(weiToEth(amountForSaleToday.mul(toBN(contrib)).div(toBN(valAndCutOff.valuation))).toString(), 0)
+      bidColData.amount = truncateDecimalString(weiToEth(amountForSaleToday.mul(toBN(contrib.toString())).div(toBN(valAndCutOff.valuation))).toString(), 0)
 
-      bidColData.price = weiToEth(bids.bids[i].contrib)
+      bidColData.price = weiToEth(bids.bids[i].contrib.toString())
 
       // calcuate start date
       const _startTime = toBN(startTime)
@@ -333,7 +333,7 @@ export default () => {
             }
             placeholder="0x..."
             onSearch={
-              (e) => {console.log(e); setAccount(e || drizzleState.account)}
+              (e) => {setAccount(e || drizzleState.account)}
             }
           />
         </Col>

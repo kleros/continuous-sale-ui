@@ -6,7 +6,7 @@ export const ethToWei = decimal => {
 }
 
 export const weiToEth = weiString => {
-  return fromWei(weiString, 'ether')
+  return fromWei(weiString.toString(), 'ether')
 }
 
 export const truncateDecimalString = (decimalString, decimalPoints) => {
