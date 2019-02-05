@@ -1,5 +1,6 @@
 import { Input, Row, Col, Checkbox, Button } from 'antd'
-import React, { useRef, useState, useEffect } from 'react'
+import Copy from 'copy-to-clipboard'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components/macro'
 import { toBN } from 'web3-utils'
 
@@ -15,8 +16,16 @@ const StyledInput = styled(Input)`
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.3);
   font-size: 18px;
-  line-height: 2;
 `
+
+const StyledDisplayInput = styled(StyledInput)`
+  background: transparent;
+  border-bottom: 1px solid white;
+  height: 40px;
+  color: white;
+  text-overflow: ellipsis;
+`
+
 const InputLabel = styled.div`
   margin: auto;
   p {
@@ -50,10 +59,8 @@ const MaxPrice = styled.div`
 
 const StyledButton = styled(Button)`
   color: white;
+  border-radius: 3px;
   height: 40px;
-  padding: 0px 33px;
-  width: 100%;
-
   &:focus {
     color: white;
   }
@@ -66,6 +73,9 @@ const ByInputData = () => {
   const { useCacheCall, drizzle } = useDrizzle()
 
   const [ maxPricePNK, setMaxPricePNK ] = useState(null)
+
+  const copyDataRef = useRef(null)
+  const copyAddrRef = useRef(null)
 
   // Get all vars from contract.
   const INFINITY = useCacheCall('ContinuousICO', 'INFINITY')
@@ -111,15 +121,39 @@ const ByInputData = () => {
       </Row>
       <Row>
         <Col offset={4} span={14}>
-          <StyledInput id='amount' type='number' placeholder={'INFINITY'} onChange={ maxValueChange }/>
+          <StyledInput id='amount' type='number' placeholder={'No Max Price'} onChange={ maxValueChange }/>
         </Col>
         <Col offset={1} span={2}>
           <StyledValueText>ETH</StyledValueText>
         </Col>
       </Row>
-      <Row>
-       <StyledInput type='textinput' value={dataString} placeholder={'loading...'}/>
+      <Row style={{"marginTop": "127px"}}>
+        <Col offset={4}>
+          <InputLabel><StyledText>Contribution Address</StyledText></InputLabel>
+        </Col>
       </Row>
+      <Row>
+        <Col offset={4} span={14}>
+          <StyledDisplayInput ref={copyAddrRef} type='textinput' value={drizzle.contracts['ContinuousICO'].address} placeholder={'loading...'}/>
+        </Col>
+        <Col span={1}>
+          <StyledButton onClick={() => Copy(copyAddrRef.current.state.value)}>Copy</StyledButton>
+        </Col>
+      </Row>
+      <Row style={{"marginTop": "16px"}}>
+        <Col offset={4}>
+          <InputLabel><StyledText>Transaction Data</StyledText></InputLabel>
+        </Col>
+      </Row>
+      <Row>
+        <Col offset={4} span={14}>
+          <StyledDisplayInput ref={copyDataRef} type='textinput' value={dataString} placeholder={'loading...'}/>
+        </Col>
+        <Col span={1}>
+          <StyledButton onClick={() => Copy(copyDataRef.current.state.value)}>Copy</StyledButton>
+        </Col>
+      </Row>
+
     </StyledPane>
   )
 }

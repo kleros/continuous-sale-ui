@@ -18,6 +18,10 @@ import ByWeb3Browser from '../components/tab-panes/by-web3-browser'
 import ByInputData from '../components/tab-panes/by-input-data'
 import { useDrizzle, useDrizzleState } from '../temp/drizzle-react-hooks'
 import { weiToEth, ethToWei, truncateDecimalString } from '../utils/numbers'
+import { ReactComponent as RightArrow } from '../assets/images/arrow-right-solid.svg'
+import { ReactComponent as Clock } from '../assets/images/clock-regular.svg'
+import { ReactComponent as Accepted } from '../assets/images/check-solid.svg'
+import { ReactComponent as Rejected } from '../assets/images/times-solid.svg'
 
 const StyledCardContainer = styled.div`
   margin-top: 25px;
@@ -77,10 +81,39 @@ const StyledTabText = styled(StyledText)`
 
 const StyledSearch = styled(Input.Search)`
   .ant-input {
-    background: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.08)!important;
+    border: none!important;
     border-radius: 3px;
     height: 40px;
+    color: white!important;
   }
+
+  .ant-btn {
+    background: #009AFF;
+    color: white;
+    padding-top: 0px;
+    height: 40px;
+    border-radius: 3px;
+  }
+
+  .ant-input-search.ant-input-search-enter-button {
+    border: none;
+  }
+`
+
+const StyledAccepted = styled(Accepted)`
+  height: 20px;
+  color: #009AFF;
+`
+
+const StyledRejected = styled(Rejected)`
+  height: 20px;
+  color: red;
+`
+
+const StyledPending = styled(Clock)`
+  height: 20px;
+  color: white
 `
 
 export default () => {
@@ -202,10 +235,10 @@ export default () => {
       }
 
       if (contrib > 0) {
-        if (currentSubsaleNumber === _bid.subsaleNumber) bidColData.status = 'pending'
-        else bidColData.status = 'accepted'
+        if (currentSubsaleNumber === _bid.subsaleNumber) bidColData.status = <StyledPending />
+        else bidColData.status = <StyledAccepted />
       } else {
-        bidColData.status = 'rejected'
+        bidColData.status = <StyledRejected />
       }
 
       bidColData.amount = truncateDecimalString(weiToEth(amountForSaleToday.mul(toBN(contrib)).div(toBN(valAndCutOff.valuation))).toString(), 0)
@@ -277,7 +310,11 @@ export default () => {
           <InformationCardsBox
             textMain={currentPricePerPNK ? truncateDecimalString(weiToEth(currentPricePerPNK).toString(), 8) + ' ETH' : 'loading...'}
             subtextMain={"PNK price if no other bids are made"}
-            textSecondary={secondsRemaining ? `${('0' + Math.floor(secondsRemaining/3600)).slice(-2)}:${('0' + Math.floor(secondsRemaining/60) % 60).slice(-2)}` : 'loading...'}
+            textSecondary={<div>
+              {secondsRemaining ? `${('0' + Math.floor(secondsRemaining/3600)).slice(-2)}:${('0' + Math.floor(secondsRemaining/60) % 60).slice(-2)}` : 'loading...'}
+              {secondsRemaining ? <Clock style={{ "height": "17px", "marginLeft": "5px"}}/> : null }
+              </div>
+            }
             subtextSecondary={"Remaining Time"}
           />
         </Col>
@@ -289,7 +326,16 @@ export default () => {
         </Col>
         <Col lg={15}>
           <StyledSubtext>Add your ETH address to see your bids</StyledSubtext>
-          <StyledSearch enterButton="Go" placeholder="0x..." onSearch={(e) => {console.log(e); setAccount(e)}}/>
+          <StyledSearch
+            style={{"height": "40px"}}
+            enterButton={
+              <RightArrow style={{"height": "17px"}}/>
+            }
+            placeholder="0x..."
+            onSearch={
+              (e) => {console.log(e); setAccount(e || drizzleState.account)}
+            }
+          />
         </Col>
       </Row>
       <Row>

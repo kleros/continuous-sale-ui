@@ -15,8 +15,8 @@ const StyledInput = styled(Input)`
   border-radius: 3px;
   background: rgba(255, 255, 255, 0.3);
   font-size: 18px;
-  line-height: 2;
 `
+
 const InputLabel = styled.div`
   margin: auto;
   p {

@@ -23,6 +23,11 @@ const StyledButton = styled(Button)`
   }
 `
 
+const AddressResponsive = styled(StyledValueText)`
+  font-size: 100%;
+  margin-top: 10px;
+`
+
 const ByAddressPane = ({
   contributionAddress
 }) => {
@@ -51,7 +56,7 @@ const ByAddressPane = ({
         size={167}
         bgColor={"rgba(255, 255, 255, 0.17)"}
       />
-      <StyledValueText>{contributionAddress}</StyledValueText>
+      <AddressResponsive>{contributionAddress}</AddressResponsive>
       <StyledButton onClick={CopyToClipboard}>{state.buttonText}</StyledButton>
       <StyledText style={{'padding': '0px 54px', 'marginTop': '35px'}}><sup>*</sup>This leads to a bid without max price which is guaranteed to be executed</StyledText>
     </StyledPane>
