@@ -340,7 +340,7 @@ export default () => {
       </Row>
       <Row>
         <Col lg={24}>
-          <Table columnData={columnData} />
+          <Table columnData={columnData.reverse()} />
         </Col>
       </Row>
     </div>
