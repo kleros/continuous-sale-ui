@@ -4,6 +4,7 @@ import styled from 'styled-components/macro'
 
 import { useDrizzle, useDrizzleState } from '../temp/drizzle-react-hooks'
 import MonthAbreviations from '../utils/month-abreviations'
+import { weiToEth } from '../utils/numbers'
 
 const StyledTable = styled(Table)`
   .ant-table-content {
@@ -70,18 +71,18 @@ const StyledTable = styled(Table)`
 `
 
 const columns = [{
-  title: 'Amount',
+  title: 'Amount (PNK)',
   dataIndex: 'amount',
   key: 'amount'
 }, {
-  title: 'Price',
+  title: 'Contribution (ETH)',
   dataIndex: 'price',
   key: 'price'
 }, {
   title: 'Date',
   dataIndex: 'date',
   key: 'date',
-  render: text => getDateFromTimestamp(text)
+  render: text => text ? getDateFromTimestamp(text) : ''
 }, {
   title: 'Status',
   dataIndex: 'status',
@@ -99,24 +100,7 @@ const getDateFromTimestamp = (ts) => {
 }
 
 export default ({
-  bidIDs
+  columnData
 }) => {
-  const { useCacheCall, drizzle } = useDrizzle()
-  const [ columnData, setColumnData ] = useState([])
-
-  for (let i = 0; i < bidIDs.length; i++) {
-    // setColumnData(columnData[i] = {
-    //   title: 'loading...'
-    // })
-    //
-    // useCacheCall(['ContinuousICO'], async (call) => {
-    //   const bid = await call('ContinuousICO', 'bids', bidIDs[i])
-    //   console.log(bid)
-    //   return setColumnData(columnData[i] = {
-    //     title: 'found...'
-    //   })
-    // })
-  }
-
   return (<StyledTable columns={columns} dataSource={columnData} />)
 }

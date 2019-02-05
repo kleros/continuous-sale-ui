@@ -1,6 +1,7 @@
 import { Button, Col, Divider, Radio, Row, Tabs } from 'antd'
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components/macro'
+import { toBN } from 'web3-utils'
 
 import {
   StyledHeading,
@@ -114,6 +115,7 @@ export default () => {
   let startTime
   let secondsPerSubsale
   let bidIDs = []
+  let INFINITY
   if (drizzleState.loaded) {
    tokensForSale = useCacheCall('ContinuousICO', 'tokensForSale')
    numberOfSubsales = useCacheCall('ContinuousICO', 'numberOfSubsales')
@@ -121,27 +123,115 @@ export default () => {
    valuationAndCutOff = currentSubsaleNumber && useCacheCall('ContinuousICO', 'valuationAndCutOff', currentSubsaleNumber)
    startTime = useCacheCall('ContinuousICO', 'startTime')
    secondsPerSubsale = useCacheCall('ContinuousICO', 'secondsPerSubsale')
-   bidIDs = (account && useCacheCall('ContinuousICO', 'getBidIdsForContributor', account, 'false')) || []
+   bidIDs = (account && useCacheCall('ContinuousICO', 'getBidIDsForContributor', account, 'false')) || []
+   INFINITY = useCacheCall('ContinuousICO', 'INFINITY')
   }
 
-  const amountForSaleToday = drizzleState.loaded
-    && numberOfSubsales
+  const amountForSaleToday = numberOfSubsales
     && tokensForSale
-    && drizzle.web3.utils.toBN(tokensForSale)
-      .div(drizzle.web3.utils.toBN(numberOfSubsales))
+    && toBN(tokensForSale)
+      .div(toBN(numberOfSubsales))
 
-  const currentPricePerPNK = valuationAndCutOff && ethToWei(drizzle.web3.utils.toBN(valuationAndCutOff.valuation)).div(amountForSaleToday)
+  const currentPricePerPNK = valuationAndCutOff && amountForSaleToday && ethToWei(toBN(valuationAndCutOff.valuation)).div(amountForSaleToday)
 
-  const timeRemaining =  secondsPerSubsale && startTime && currentSubsaleNumber&& (startTime + (secondsPerSubsale * (currentSubsaleNumber + 1))) - (new Date().getTime() / 1000)
+  const secondsNow = parseInt(new Date().getTime() / 1000)
+  const nextSubsaleStart = secondsPerSubsale &&
+    startTime &&
+    currentSubsaleNumber &&
+    toBN(startTime).add(
+      (toBN(secondsPerSubsale).mul(
+        toBN(currentSubsaleNumber))
+      )
+    )
+  const secondsRemaining =  nextSubsaleStart && nextSubsaleStart.sub(
+    toBN(secondsNow)
+  ).toString()
 
-  if (currentPricePerPNK) {
-    // console.log(valuationAndCutOff.valuation)
-    // console.log(amountForSaleToday.toString())
-    // console.log(currentPricePerPNK.toString())
-  }
+  const bids = useCacheCall(['ContinuousICO'], call =>
+    bidIDs.length
+      ? bidIDs.reduce(
+          (acc, bidID) => {
+            if (!acc.IDs[bidID]) {
+              acc.IDs[bidID] = true
+              const bid = call(
+                'ContinuousICO',
+                'bids',
+                bidID
+              )
+              if (bid) {
+                acc.bids.push({...bid, bidID})
+                if (!acc.subsaleIDs[bid.subsaleNumber]) {
+                  acc.subsaleIDs[bid.subsaleNumber] = true
+                  const valAndCutOffForSubsale = call(
+                    'ContinuousICO',
+                    'valuationAndCutOff',
+                    bid.subsaleNumber
+                  )
 
-  function getBidsForAccount(account) {
+                  if (valAndCutOffForSubsale)
+                    acc.valAndCutOffForSubsale[bid.subsaleNumber.toString()] = valAndCutOffForSubsale
+                  else
+                    acc.loadingValAndCutOffs = true
+                }
+              }
 
+              else acc.loading = true
+            }
+            return acc
+          },
+          { loading: false, loadingValAndCutOffs: false, bids: [], valAndCutOffForSubsale: {}, IDs: {}, subsaleIDs: {} }
+        )
+      : { loading: true, loadingValAndCutOffs: true, bids: [], valAndCutOffForSubsale: {}, IDs: {}, subsaleIDs: {} }
+    )
+
+  const columnData = []
+  if (!bids.loading && !bids.loadingValAndCutOffs && amountForSaleToday && currentPricePerPNK && INFINITY && startTime && secondsPerSubsale) {
+    for (let i=0; i<bids.bids.length; i++){
+      const _bid = bids.bids[i]
+      const bidColData = {
+        'amount': null,
+        'price': null,
+        'date': null,
+        'status': null
+      }
+
+      const valAndCutOff = bids.valAndCutOffForSubsale[_bid.subsaleNumber]
+      // currentCutOffBidMaxValuation will come back as 0 if all bids are accepted
+      const currentCutOffBidMaxValuation = valAndCutOff.currentCutOffBidMaxValuation === '0' ? INFINITY : valAndCutOff.currentCutOffBidMaxValuation
+
+      let contrib = 0
+      if (currentCutOffBidMaxValuation === INFINITY) { // all bids are accepted this round
+        contrib = _bid.contrib
+      }
+      else if (toBN(_bid.maxValuation).gt(toBN(currentCutOffBidMaxValuation))) {
+        contrib = _bid.contrib
+      }
+      else if (toBN(_bid.maxValuation).eq(toBN(currentCutOffBidMaxValuation))) {
+        if (_bid.bidID === valAndCutOff.currentCutOffBidID)
+          contrib = valAndCutOff.currentCutOffBidContrib
+        else if (_bid.bidID > valAndCutOff.currentCutOffBidID)
+          contrib = _bid.contrib
+      }
+
+      if (contrib > 0) {
+        if (currentSubsaleNumber === _bid.subsaleNumber) bidColData.status = 'pending'
+        else bidColData.status = 'accepted'
+      } else {
+        bidColData.status = 'rejected'
+      }
+
+      bidColData.amount = truncateDecimalString(weiToEth(amountForSaleToday.mul(toBN(contrib)).div(toBN(valAndCutOff.valuation))).toString(), 0)
+
+      bidColData.price = weiToEth(bids.bids[i].contrib)
+
+      // calcuate start date
+      const _startTime = toBN(startTime)
+      const _subsaleNumberMultiplyer = toBN(_bid.subsaleNumber - 1)
+      const _secondsPerSubsale = toBN(secondsPerSubsale)
+      bidColData.date = (_startTime.add((_subsaleNumberMultiplyer.mul(_secondsPerSubsale)))).toNumber()
+
+      columnData[i] = bidColData
+    }
   }
 
   return (
@@ -199,7 +289,7 @@ export default () => {
           <InformationCardsBox
             textMain={currentPricePerPNK ? truncateDecimalString(weiToEth(currentPricePerPNK).toString(), 8) + ' ETH' : 'loading...'}
             subtextMain={"PNK price if no other bids are made"}
-            textSecondary={"12:21"}
+            textSecondary={secondsRemaining ? `${('0' + Math.floor(secondsRemaining/3600)).slice(-2)}:${('0' + Math.floor(secondsRemaining/60) % 60).slice(-2)}` : 'loading...'}
             subtextSecondary={"Remaining Time"}
           />
         </Col>
@@ -216,7 +306,7 @@ export default () => {
       </Row>
       <Row>
         <Col span={24}>
-          <Table bidIDs={bidIDs || []} />
+          <Table columnData={columnData} />
         </Col>
       </Row>
     </div>

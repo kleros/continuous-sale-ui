@@ -1,544 +1,563 @@
 {
   "contractName": "ContinuousICO",
   "abi": [
-  	{
-  		"constant": false,
-  		"inputs": [
-  			{
-  				"name": "_maxIt",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "_subsaleNumber",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "finalize",
-  		"outputs": [],
-  		"payable": false,
-  		"stateMutability": "nonpayable",
-  		"type": "function"
-  	},
-  	{
-  		"constant": false,
-  		"inputs": [
-  			{
-  				"name": "_bidID",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "redeem",
-  		"outputs": [],
-  		"payable": false,
-  		"stateMutability": "nonpayable",
-  		"type": "function"
-  	},
-  	{
-  		"constant": false,
-  		"inputs": [
-  			{
-  				"name": "_subsaleNumber",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "_maxValuation",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "_next",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "searchAndBid",
-  		"outputs": [],
-  		"payable": true,
-  		"stateMutability": "payable",
-  		"type": "function"
-  	},
-  	{
-  		"constant": false,
-  		"inputs": [
-  			{
-  				"name": "_maxValuation",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "_next",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "searchAndBidToOngoingSubsale",
-  		"outputs": [],
-  		"payable": true,
-  		"stateMutability": "payable",
-  		"type": "function"
-  	},
-  	{
-  		"constant": false,
-  		"inputs": [
-  			{
-  				"name": "_token",
-  				"type": "address"
-  			}
-  		],
-  		"name": "setToken",
-  		"outputs": [],
-  		"payable": false,
-  		"stateMutability": "nonpayable",
-  		"type": "function"
-  	},
-  	{
-  		"constant": false,
-  		"inputs": [
-  			{
-  				"name": "_subsaleNumber",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "_maxValuation",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "_nextBidID",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "submitBid",
-  		"outputs": [],
-  		"payable": true,
-  		"stateMutability": "payable",
-  		"type": "function"
-  	},
-  	{
-  		"constant": false,
-  		"inputs": [
-  			{
-  				"name": "_maxValuation",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "_next",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "submitBidToOngoingSubsale",
-  		"outputs": [],
-  		"payable": true,
-  		"stateMutability": "payable",
-  		"type": "function"
-  	},
-  	{
-  		"inputs": [
-  			{
-  				"name": "_beneficiary",
-  				"type": "address"
-  			},
-  			{
-  				"name": "_numberOfSubsales",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "_secondsPerSubsale",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "_startTime",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "nonpayable",
-  		"type": "constructor"
-  	},
-  	{
-  		"payable": true,
-  		"stateMutability": "payable",
-  		"type": "fallback"
-  	},
-  	{
-  		"anonymous": false,
-  		"inputs": [
-  			{
-  				"indexed": false,
-  				"name": "subsaleNumber",
-  				"type": "uint256"
-  			},
-  			{
-  				"indexed": false,
-  				"name": "bidID",
-  				"type": "uint256"
-  			},
-  			{
-  				"indexed": false,
-  				"name": "time",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "BidSubmitted",
-  		"type": "event"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [],
-  		"name": "beneficiary",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "address"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "bids",
-  		"outputs": [
-  			{
-  				"name": "prev",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "next",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "maxValuation",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "contrib",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "contributor",
-  				"type": "address"
-  			},
-  			{
-  				"name": "redeemed",
-  				"type": "bool"
-  			},
-  			{
-  				"name": "subsaleNumber",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [
-  			{
-  				"name": "",
-  				"type": "address"
-  			},
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "contributorBidIDs",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "cutOffBidIDForSubsales",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "finalized",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "bool"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [
-  			{
-  				"name": "_contributorAddress",
-  				"type": "address"
-  			},
-  			{
-  				"name": "_oldestFirst",
-  				"type": "bool"
-  			}
-  		],
-  		"name": "getBidIdsForContributor",
-  		"outputs": [
-  			{
-  				"name": "_bidIds",
-  				"type": "uint256[]"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [],
-  		"name": "getOngoingSubsaleNumber",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [],
-  		"name": "globalLastBidID",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [],
-  		"name": "INFINITY",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [],
-  		"name": "numberOfSubsales",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [],
-  		"name": "owner",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "address"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [
-  			{
-  				"name": "_subsaleNumber",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "_maxValuation",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "_initialGuess",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "search",
-  		"outputs": [
-  			{
-  				"name": "nextInsert",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [],
-  		"name": "secondsPerSubsale",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [],
-  		"name": "startTime",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "sumAcceptedContribs",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [],
-  		"name": "token",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "address"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [],
-  		"name": "tokensForSale",
-  		"outputs": [
-  			{
-  				"name": "",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [
-  			{
-  				"name": "_contributor",
-  				"type": "address"
-  			}
-  		],
-  		"name": "totalContrib",
-  		"outputs": [
-  			{
-  				"name": "contribution",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	},
-  	{
-  		"constant": true,
-  		"inputs": [
-  			{
-  				"name": "_subsaleNumber",
-  				"type": "uint256"
-  			}
-  		],
-  		"name": "valuationAndCutOff",
-  		"outputs": [
-  			{
-  				"name": "valuation",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "currentCutOffBidID",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "currentCutOffBidMaxValuation",
-  				"type": "uint256"
-  			},
-  			{
-  				"name": "currentCutOffBidContrib",
-  				"type": "uint256"
-  			}
-  		],
-  		"payable": false,
-  		"stateMutability": "view",
-  		"type": "function"
-  	}
-  ]
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_maxIt",
+				"type": "uint256"
+			},
+			{
+				"name": "_subsaleNumber",
+				"type": "uint256"
+			}
+		],
+		"name": "finalize",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_bidID",
+				"type": "uint256"
+			}
+		],
+		"name": "redeem",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_subsaleNumber",
+				"type": "uint256"
+			},
+			{
+				"name": "_maxValuation",
+				"type": "uint256"
+			},
+			{
+				"name": "_next",
+				"type": "uint256"
+			}
+		],
+		"name": "searchAndBid",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_maxValuation",
+				"type": "uint256"
+			},
+			{
+				"name": "_next",
+				"type": "uint256"
+			}
+		],
+		"name": "searchAndBidToOngoingSubsale",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_token",
+				"type": "address"
+			}
+		],
+		"name": "setToken",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_subsaleNumber",
+				"type": "uint256"
+			},
+			{
+				"name": "_maxValuation",
+				"type": "uint256"
+			},
+			{
+				"name": "_nextBidID",
+				"type": "uint256"
+			}
+		],
+		"name": "submitBid",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_maxValuation",
+				"type": "uint256"
+			},
+			{
+				"name": "_next",
+				"type": "uint256"
+			}
+		],
+		"name": "submitBidToOngoingSubsale",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"name": "_beneficiary",
+				"type": "address"
+			},
+			{
+				"name": "_numberOfSubsales",
+				"type": "uint256"
+			},
+			{
+				"name": "_secondsPerSubsale",
+				"type": "uint256"
+			},
+			{
+				"name": "_startTime",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "fallback"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "subsaleNumber",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "bidID",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "time",
+				"type": "uint256"
+			}
+		],
+		"name": "BidSubmitted",
+		"type": "event"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "beneficiary",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_bidID",
+				"type": "uint256"
+			}
+		],
+		"name": "bidAccepted",
+		"outputs": [
+			{
+				"name": "accepted",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "bids",
+		"outputs": [
+			{
+				"name": "prev",
+				"type": "uint256"
+			},
+			{
+				"name": "next",
+				"type": "uint256"
+			},
+			{
+				"name": "maxValuation",
+				"type": "uint256"
+			},
+			{
+				"name": "contrib",
+				"type": "uint256"
+			},
+			{
+				"name": "contributor",
+				"type": "address"
+			},
+			{
+				"name": "redeemed",
+				"type": "bool"
+			},
+			{
+				"name": "subsaleNumber",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "address"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "contributorBidIDs",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "cutOffBidIDForSubsales",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "finalized",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_contributorAddress",
+				"type": "address"
+			},
+			{
+				"name": "_oldestFirst",
+				"type": "bool"
+			}
+		],
+		"name": "getBidIDsForContributor",
+		"outputs": [
+			{
+				"name": "_bidIds",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getOngoingSubsaleNumber",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "globalLastBidID",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "INFINITY",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "numberOfSubsales",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_subsaleNumber",
+				"type": "uint256"
+			},
+			{
+				"name": "_maxValuation",
+				"type": "uint256"
+			},
+			{
+				"name": "_initialGuess",
+				"type": "uint256"
+			}
+		],
+		"name": "search",
+		"outputs": [
+			{
+				"name": "nextInsert",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "secondsPerSubsale",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "startTime",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "sumAcceptedContribs",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "token",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "tokensForSale",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_contributor",
+				"type": "address"
+			}
+		],
+		"name": "totalContrib",
+		"outputs": [
+			{
+				"name": "contribution",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "_subsaleNumber",
+				"type": "uint256"
+			}
+		],
+		"name": "valuationAndCutOff",
+		"outputs": [
+			{
+				"name": "valuation",
+				"type": "uint256"
+			},
+			{
+				"name": "currentCutOffBidID",
+				"type": "uint256"
+			},
+			{
+				"name": "currentCutOffBidMaxValuation",
+				"type": "uint256"
+			},
+			{
+				"name": "currentCutOffBidContrib",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	}
+]
 }

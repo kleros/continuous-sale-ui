@@ -11,7 +11,8 @@ export const weiToEth = weiString => {
 
 export const truncateDecimalString = (decimalString, decimalPoints) => {
   const decimalIndex = decimalString.indexOf('.')
-  const cutOffPoint = decimalIndex + decimalPoints + 1
+  let cutOffPoint = decimalIndex + decimalPoints + 1
+  if (decimalPoints === 0) cutOffPoint--
   if (decimalIndex > 0 && decimalString.length > cutOffPoint) {
     decimalString = decimalString.substring(0, cutOffPoint)
   }

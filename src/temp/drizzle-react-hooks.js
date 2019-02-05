@@ -182,7 +182,7 @@ export const Initializer = ({
     drizzleStatusInitialized: drizzleState.drizzleStatus.initialized,
     web3Status: drizzleState.web3.status
   }))
-  return children // Don't want to delay load for Drizzle 
+  return children // Don't want to delay load for Drizzle
 }
 
 Initializer.propTypes = {

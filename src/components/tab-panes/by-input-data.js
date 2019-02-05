@@ -1,6 +1,7 @@
 import { Input, Row, Col, Checkbox, Button } from 'antd'
 import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components/macro'
+import { toBN } from 'web3-utils'
 
 import { useDrizzle, useDrizzleState } from '../../temp/drizzle-react-hooks'
 import { StyledText, StyledValueText, StyledSubtext } from '../typography'
@@ -73,8 +74,8 @@ const ByInputData = () => {
   const tokensForSale = useCacheCall('ContinuousICO', 'tokensForSale')
   const numberOfSubsales = useCacheCall('ContinuousICO', 'numberOfSubsales')
   // Get search position once our other vars have been set/loaded.
-  const amountForSaleToday = tokensForSale && numberOfSubsales && drizzle.web3.utils.toBN(tokensForSale).div(drizzle.web3.utils.toBN(numberOfSubsales))
-  const maxVal = amountForSaleToday && INFINITY && (amountForSaleToday.mul(maxPricePNK ? drizzle.web3.utils.toBN(ethToWei(maxPricePNK)) : drizzle.web3.utils.toBN(INFINITY))).div(drizzle.web3.utils.toBN(ethToWei("1"))).toString() // convert price per pnk to total ETH contributed
+  const amountForSaleToday = tokensForSale && numberOfSubsales && toBN(tokensForSale).div(toBN(numberOfSubsales))
+  const maxVal = amountForSaleToday && INFINITY && (amountForSaleToday.mul(maxPricePNK ? toBN(ethToWei(maxPricePNK)) : toBN(INFINITY))).div(toBN(ethToWei("1"))).toString() // convert price per pnk to total ETH contributed
   const searchStart = currentSubsaleNumber && maxVal && lastBid && useCacheCall('ContinuousICO', 'search', currentSubsaleNumber, maxVal, lastBid)
 
   let dataString = ''
