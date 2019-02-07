@@ -5,7 +5,7 @@ import { toBN } from 'web3-utils'
 
 import { useDrizzle, useDrizzleState } from '../../temp/drizzle-react-hooks'
 import { StyledText, StyledValueText, StyledSubtext } from '../typography'
-import { ethToWei } from '../../utils/numbers'
+import { ethToWei, pricePerPNKToMaxVal, INFINITY } from '../../utils/numbers'
 
 const StyledPane = styled.div`
   text-align: center;
@@ -73,14 +73,13 @@ const ByWeb3Browser = () => {
   }))
 
   // Get all vars from contract.
-  const INFINITY = useCacheCall('ContinuousICO', 'INFINITY')
   const lastBid = useCacheCall('ContinuousICO', 'globalLastBidID')
   const currentSubsaleNumber = useCacheCall('ContinuousICO', 'getOngoingSubsaleNumber')
   const tokensForSale = useCacheCall('ContinuousICO', 'tokensForSale')
   const numberOfSubsales = useCacheCall('ContinuousICO', 'numberOfSubsales')
 
   const amountForSaleToday = tokensForSale && numberOfSubsales && toBN(tokensForSale).div(toBN(numberOfSubsales))
-  const maxVal = amountForSaleToday && INFINITY && (amountForSaleToday.mul(maxPricePNK ? toBN(ethToWei(maxPricePNK)) : toBN(INFINITY))).div(toBN(ethToWei("1"))).toString() // convert price per pnk to total ETH contributed
+  const maxVal = amountForSaleToday && pricePerPNKToMaxVal(maxPricePNK || INFINITY, amountForSaleToday)
   const searchStart = currentSubsaleNumber && maxVal && lastBid && useCacheCall('ContinuousICO', 'search', currentSubsaleNumber, maxVal, lastBid)
   // Send bid
   const { send, status } = useCacheSend('ContinuousICO', 'searchAndBidToOngoingSubsale')

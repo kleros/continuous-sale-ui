@@ -16,6 +16,7 @@ import Table from '../components/table'
 import ByAddressPane from '../components/tab-panes/by-address'
 import ByWeb3Browser from '../components/tab-panes/by-web3-browser'
 import ByInputData from '../components/tab-panes/by-input-data'
+import SecondsInSubsale from '../components/seconds-in-subsale'
 import { useDrizzle, useDrizzleState } from '../temp/drizzle-react-hooks'
 import { weiToEth, ethToWei, truncateDecimalString } from '../utils/numbers'
 import { ReactComponent as RightArrow } from '../assets/images/arrow-right-solid.svg'
@@ -139,7 +140,6 @@ export default () => {
   let startTime
   let secondsPerSubsale
   let bidIDs = []
-  let INFINITY
   if (drizzleState.loaded) {
    tokensForSale = useCacheCall('ContinuousICO', 'tokensForSale')
    numberOfSubsales = useCacheCall('ContinuousICO', 'numberOfSubsales')
@@ -148,7 +148,6 @@ export default () => {
    startTime = useCacheCall('ContinuousICO', 'startTime')
    secondsPerSubsale = useCacheCall('ContinuousICO', 'secondsPerSubsale')
    bidIDs = (account && useCacheCall('ContinuousICO', 'getBidIDsForContributor', account, 'false')) || []
-   INFINITY = useCacheCall('ContinuousICO', 'INFINITY')
   }
 
   const amountForSaleToday = numberOfSubsales
@@ -157,19 +156,6 @@ export default () => {
       .div(toBN(numberOfSubsales))
 
   const currentPricePerPNK = valuationAndCutOff && amountForSaleToday && toBN(ethToWei(valuationAndCutOff.valuation.toString())).div(amountForSaleToday)
-
-  const secondsNow = parseInt(new Date().getTime() / 1000)
-  const nextSubsaleStart = secondsPerSubsale &&
-    startTime &&
-    currentSubsaleNumber &&
-    toBN(startTime).add(
-      (toBN(secondsPerSubsale).mul(
-        toBN(currentSubsaleNumber))
-      )
-    )
-  const secondsRemaining =  nextSubsaleStart && nextSubsaleStart.sub(
-    toBN(secondsNow)
-  ).toString()
 
   const bids = useCacheCall(['ContinuousICO'], call =>
     bidIDs.length
@@ -209,7 +195,7 @@ export default () => {
     )
 
   const columnData = []
-  if (!bids.loading && !bids.loadingValAndCutOffs && amountForSaleToday && currentPricePerPNK && INFINITY && startTime && secondsPerSubsale) {
+  if (!bids.loading && !bids.loadingValAndCutOffs && amountForSaleToday && currentPricePerPNK && startTime && secondsPerSubsale) {
     for (let i=0; i<bids.bids.length; i++){
       const _bid = bids.bids[i]
       const bidColData = {
@@ -310,11 +296,7 @@ export default () => {
           <InformationCardsBox
             textMain={currentPricePerPNK ? truncateDecimalString(weiToEth(currentPricePerPNK.toString()), 8) + ' ETH' : 'loading...'}
             subtextMain={"PNK price if no other bids are made"}
-            textSecondary={<div>
-              {secondsRemaining ? `${('0' + Math.floor(secondsRemaining/3600)).slice(-2)}:${('0' + Math.floor(secondsRemaining/60) % 60).slice(-2)}` : 'loading...'}
-              {secondsRemaining ? <Clock style={{ "height": "17px", "marginLeft": "5px"}}/> : null }
-              </div>
-            }
+            textSecondary={<SecondsInSubsale />}
             subtextSecondary={"Remaining Time"}
           />
         </Col>
