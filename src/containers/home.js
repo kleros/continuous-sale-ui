@@ -245,11 +245,11 @@ export default () => {
     <div>
       <Row style={{'marginBottom': '76px'}}>
         <Col lg={9}>
-          <StyledSubheading>Contribution Options</StyledSubheading>
+          <StyledSubheading>How to Contribute</StyledSubheading>
           <StyledCardContainer>
             <Tabs type="card">
               <Tabs.TabPane
-                tab={<StyledTabText>by Address</StyledTabText>}
+                tab={<StyledTabText>Basic</StyledTabText>}
                 key={1}
               >
                 <ByAddressPane
@@ -261,13 +261,13 @@ export default () => {
                 />
               </Tabs.TabPane>
               <Tabs.TabPane
-                tab={<StyledTabText>by Web3 Wallet</StyledTabText>}
+                tab={<StyledTabText>Web3</StyledTabText>}
                 key={2}
               >
                 <ByWeb3Browser />
               </Tabs.TabPane>
               <Tabs.TabPane
-                tab={<StyledTabText>by Inputing Data</StyledTabText>}
+                tab={<StyledTabText>Advanced</StyledTabText>}
                 key={3}
               >
                 <ByInputData />
@@ -277,11 +277,11 @@ export default () => {
         </Col>
         <Col lg={13} offset={1}>
           <StyledHeading>
-            Kleros Pinakion (PNK) Token Distribution
+            Kleros Continuous Sale
           </StyledHeading>
           <StyledText style={{ 'marginBottom': '18px' }}>
-            Kleros Continuous Sale: 12% of the token supply is to be sold over a
-            12-month period in daily auction
+            12% of the Pinakion (PNK) supply will be sold over a
+            12-month period in daily auctions.
           </StyledText>
           <BreakLine />
           <StyledSubheading style={{ 'marginTop': '34px' }}>

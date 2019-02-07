@@ -65,6 +65,7 @@ const StyledButton = styled(Button)`
 const ByWeb3Browser = () => {
   const [ test, setTest ] = useState(0)
   const [ maxPricePNK, setMaxPricePNK ] = useState(null)
+  const [ amountToContribute, setAmountToContribute ] = useState(0)
 
   const { useCacheCall, drizzle, useCacheSend } = useDrizzle()
   const drizzleState = useDrizzleState(drizzleState => ({
@@ -90,11 +91,12 @@ const ByWeb3Browser = () => {
     ? 'Unlock MetaMask to submit a bid'
     : null
 
-  const submitDisabled = false
 
   const maxValViewRef = useRef(null)
   const maxValInputRef = useRef(null)
   const amountToContributeRef = useRef(null)
+
+  const submitEnabled = unlockMetaMask === null && amountToContribute > 0
 
   function maxValChecked(e) {
     if (e.target.checked) {
@@ -108,7 +110,7 @@ const ByWeb3Browser = () => {
   }
 
   function submitTransaction() {
-    const amountWei = ethToWei(amountToContributeRef.current.state.value)
+    const amountWei = ethToWei(amountToContribute)
 
     if (!maxPricePNK) {
       // use fallback function if no max price
@@ -137,7 +139,7 @@ const ByWeb3Browser = () => {
       </Row>
       <Row>
         <Col offset={4} span={14}>
-          <StyledInput id='amount' type='number' placeholder={0} ref={amountToContributeRef} />
+          <StyledInput min={0} id='amount' type='number' placeholder={0} ref={amountToContributeRef} onChange={(e) => setAmountToContribute(e.target.value || 0)} />
         </Col>
         <Col offset={1} span={2}>
           <StyledValueText>ETH</StyledValueText>
@@ -148,7 +150,7 @@ const ByWeb3Browser = () => {
           <StyledSubtext style={{'textAlign' : 'right', 'marginRight': '9px'}}>With Maximum Price per PNK</StyledSubtext>
         </Col>
         <Col span={1}>
-          <StyledCheckbox type='checkbox' onChange={maxValChecked} />
+          <StyledCheckbox min={0} type='checkbox' onChange={maxValChecked} />
         </Col>
       </Row>
       <MaxPrice className='maxPrice'>
@@ -171,7 +173,7 @@ const ByWeb3Browser = () => {
       </MaxPrice>
       <Row style={{'marginTop' : '100px'}}>
         <Col offset={4} span={14}>
-          <StyledButton disabled={submitDisabled} onClick={submitTransaction}>Submit Bid</StyledButton>
+          <StyledButton disabled={!submitEnabled} onClick={submitTransaction}>Submit Bid</StyledButton>
         </Col>
       </Row>
       <Row style={{'marginTop' : '5px'}}>

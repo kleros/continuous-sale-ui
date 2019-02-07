@@ -21,9 +21,9 @@ export const truncateDecimalString = (decimalString, decimalPoints) => {
 }
 
 export const pricePerPNKToMaxVal = (pricePerPNK, amountForSale) => {
-  const amountForSaleBN = toBN(amountForSale)
+  const amountForSaleBN = toBN(amountForSale.toString())
   const pricePerPNKWei = toBN(ethToWei(pricePerPNK.toString()))
-  const ethDivisor = ethToWei(toBN("1"))
+  const ethDivisor = toBN(ethToWei("1"))
   return amountForSaleBN.mul(pricePerPNKWei).div(ethDivisor).toString() // convert price per pnk to total ETH contributed
 }
 

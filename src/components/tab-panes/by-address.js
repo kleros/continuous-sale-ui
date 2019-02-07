@@ -58,7 +58,7 @@ const ByAddressPane = ({
       />
       <AddressResponsive>{contributionAddress}</AddressResponsive>
       <StyledButton onClick={CopyToClipboard}>{state.buttonText}</StyledButton>
-      <StyledText style={{'padding': '0px 54px', 'marginTop': '35px'}}><sup>*</sup>This leads to a bid without max price which is guaranteed to be executed</StyledText>
+      <StyledText style={{'padding': '0px 54px', 'marginTop': '55px'}}><sup>*</sup>This guarantees a purchase of PNK</StyledText>
     </StyledPane>
   )
 }
