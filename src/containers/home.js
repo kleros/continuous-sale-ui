@@ -139,7 +139,6 @@ export default () => {
   let secondsPerSubsale
   let bidIDs = []
   if (drizzleState.loaded) {
-    drizzle.web3.eth.net.getId().then(result => console.log(result))
     tokensForSale = useCacheCall('ContinuousICO', 'tokensForSale')
     numberOfSubsales = useCacheCall('ContinuousICO', 'numberOfSubsales')
     currentSubsaleNumber = useCacheCall(

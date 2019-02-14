@@ -63,7 +63,6 @@ const StyledButton = styled(Button)`
 `
 
 const ByWeb3Browser = () => {
-  const [ test, setTest ] = useState(0)
   const [ maxPricePNK, setMaxPricePNK ] = useState(null)
   const [ amountToContribute, setAmountToContribute ] = useState(0)
 
@@ -96,7 +95,7 @@ const ByWeb3Browser = () => {
   const maxValInputRef = useRef(null)
   const amountToContributeRef = useRef(null)
 
-  const submitEnabled = unlockMetaMask === null && amountToContribute > 0
+  const submitEnabled = unlockMetaMask === null && amountToContribute > 0 && (maxPricePNK ? maxPricePNK > 0 : true)
 
   function maxValChecked(e) {
     if (e.target.checked) {

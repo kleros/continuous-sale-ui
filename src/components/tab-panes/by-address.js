@@ -28,11 +28,13 @@ const AddressResponsive = styled(StyledValueText)`
   margin-top: 10px;
 `
 
+const BUTTON_TEXT = 'Copy Contribution Address'
+
 const ByAddressPane = ({
   contributionAddress
 }) => {
   const [state, setState] = useState({
-    buttonText: 'Copy Contribution Address'
+    buttonText: BUTTON_TEXT
   })
 
   const CopyToClipboard = () => {
@@ -42,7 +44,7 @@ const ByAddressPane = ({
     })
 
     setTimeout(function(){ setState({
-      buttonText: 'Copy Contribution Address'
+      buttonText: BUTTON_TEXT
     }) }, 500);
   }
 
